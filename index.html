@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ghurl</title>
+
+	<style>
+		section {
+			display: none;
+		}
+
+		body.explain section.explain,
+		body.redirect section.redirect,
+		body.error section.error
+		{
+			display: block;
+		}
+	</style>
+
+</head>
+<body class="unk">
+	<script>
+		var getN = function() {
+			return window.location.search.substring(1);
+		};
+
+		var redirect = function(n) {
+			document.body.className = "redirect";
+			var r = new XMLHttpRequest();
+			r.open("GET", "https://api.github.com/repos/ghurl/db/issues/" + n, true);
+			r.onreadystatechange = function () {
+				if(r.readyState !== 4) return;
+
+				var json = JSON.parse(r.responseText);
+
+				if(r.status === 200) {
+					console.log(json);
+					window.location.replace(json.title);
+				} else {
+					console.log('error', json);
+					document.body.className = "error";
+				}
+			};
+			r.send();
+		};
+
+		var explain = function() {
+			document.body.className = "explain";
+		};
+
+		var main = function() {
+			var n = getN();
+			if (n) {
+				redirect(n);
+			} else {
+				explain();
+			}
+		};
+
+		setTimeout(main, 1);
+	</script>
+
+	<section class="explain">
+		Welcome.
+	</section>
+
+	<section class="error">
+		Error!
+	</section>
+
+	<section class="redirect">
+		Now redirecting...
+	</section>
+
+</body>
+</html>
+
