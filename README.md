@@ -1,5 +1,4 @@
-ghurl.github.io
-===============
+# [ghurl.github.io](https://ghurl.github.io)
 
 URL shortener powered by GitHub pages & repos
 
