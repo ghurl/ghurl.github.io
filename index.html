@@ -20,6 +20,15 @@
 			padding: 1em 2em 2em 2em;
 		}
 
+		a {
+			color: #c0392b;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
 		address {
 			text-align: right;
 			font-size: 0.75em;
@@ -27,6 +36,14 @@
 
 		section {
 			display: none;
+		}
+
+		pre {
+			background-color: #f8f8f8;
+			border: 1px solid #ddd;
+			overflow: auto;
+			padding: 6px 10px;
+			border-radius: 3px;
 		}
 
 		body.unk section.unk,
@@ -62,6 +79,8 @@
 					window.location.replace(url);
 				} else {
 					document.body.className = "error";
+					console.log(json.message);
+					document.getElementById('error-message').innerHTML = json.message;
 				}
 			};
 			r.send();
@@ -85,7 +104,7 @@
 
 	<div id="container">
 
-		<h1>ghurl</h1>
+		<h1><a href="/">ghurl</a></h1>
 
 		<section class="unk">
 			<p>Loading...</p>
@@ -114,6 +133,12 @@
 				where n is an issue on the <a href="https://github.com/ghurl/db/issues">ghurl/db</a> repository.
 				The title of the issue is used as the URL to redirect.
 			</p>
+			<p>
+				This is the error message you got:
+			</p>
+			<pre id="error-message">
+
+			</pre>
 		</section>
 
 		<section class="redirect">
