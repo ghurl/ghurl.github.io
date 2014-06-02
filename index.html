@@ -5,10 +5,31 @@
 	<title>ghurl</title>
 
 	<style>
+		body {
+			color: #1A1A1A;
+			font-family: Helvetica, Arial, sans-serif;
+			font-size: 20px;
+			background-color: #ebe8df;
+		}
+
+		#container {
+			left: auto;
+			width: 35em;
+			margin: 5em auto;
+			background-color: white;
+			padding: 1em 2em 2em 2em;
+		}
+
+		address {
+			text-align: right;
+			font-size: 0.75em;
+		}
+
 		section {
 			display: none;
 		}
 
+		body.unk section.unk,
 		body.explain section.explain,
 		body.redirect section.redirect,
 		body.error section.error
@@ -60,17 +81,50 @@
 		setTimeout(main, 1);
 	</script>
 
-	<section class="explain">
-		Welcome.
-	</section>
+	<div id="container">
 
-	<section class="error">
-		Error!
-	</section>
+		<h1>ghurl</h1>
 
-	<section class="redirect">
-		Now redirecting...
-	</section>
+		<section class="unk">
+			<p>Loading...</p>
+		</section>
+
+		<section class="explain">
+			<p>
+				Proof of concept URL shortener with no back-end servers (apart from GitHub's!).
+			</p>
+			<p>
+				Create an issue on the <a href="https://github.com/ghurl/db/issues">ghurl/db</a> repository.
+				The <strong>title</strong> of the issue should be the URL you want to redirect to.
+			</p>
+			<p>
+				Then, construct your shortened URL using <strong>n</strong>, the issue number:
+				<code>https://ghurl.github.io/?n</code>
+			</p>
+		</section>
+
+		<section class="error">
+			<p>
+				Oops, I think that's a bad URL.
+			</p>
+			<p>
+				Correct URLs are in the format <code>https://ghurl.github.io/?n</code>,
+				where n is an issue on the <a href="https://github.com/ghurl/db/issues">ghurl/db</a> repository.
+				The title of the issue is used as the URL to redirect.
+			</p>
+		</section>
+
+		<section class="redirect">
+			<p>
+				Now redirecting...
+			</p>
+		</section>
+
+		<address class="author">
+			A quick hack by <a href="https://github.com/gberger">gberger</a>
+		</address>
+
+	</div>
 
 </body>
 </html>
