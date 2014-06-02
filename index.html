@@ -55,10 +55,12 @@
 				var json = JSON.parse(r.responseText);
 
 				if(r.status === 200) {
-					console.log(json);
-					window.location.replace(json.title);
+					var url = json.title;
+					if(!/^https?:\/\//.test(url)) {
+						url = 'http://' + url;
+					}
+					window.location.replace(url);
 				} else {
-					console.log('error', json);
 					document.body.className = "error";
 				}
 			};
