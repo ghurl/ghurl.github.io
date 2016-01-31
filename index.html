@@ -188,7 +188,7 @@
 		var explain = function() {
 			document.body.className = "explain";
 			getJson(issuesUrl, function(status, json) {
-				nextN = json.length;
+				nextN = json[0].number + 1;
 				var ul = document.getElementById('existing');
 				var i;
 				for(i = 0; i < json.length; i++) {
