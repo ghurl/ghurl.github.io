@@ -87,6 +87,38 @@
 			content: counter(li-counter);
 			counter-increment: li-counter;
 		}
+
+		input[type="text"] {
+			padding: 10px;
+			border: none;
+			border-bottom: solid 2px #c9c9c9;
+			transition: border 0.3s;
+			outline: none;
+			background-color: #eee;
+			font-size: 1em;
+			width: 80%
+		}
+		input[type="text"]:focus {
+			border-bottom: solid 2px #969696;
+		}
+
+		button {
+			padding: 10px;
+			border: none;
+			border-bottom: solid 2px #c9c9c9;
+			outline: none;
+			background-color: #eee;
+			font-size: 1em;
+			cursor: pointer;
+			width: 10%;
+		}
+		button:hover {
+			background-color: #ddd;
+		}
+		button:active {
+			border-bottom-color: #969696;;
+		}
+
 	</style>
 
 </head>
@@ -125,6 +157,18 @@
 			return url;
 		};
 
+		var handleSubmit = function(e) {
+			if (e && e.preventDefault) e.preventDefault();
+			var title = encodeURIComponent(document.getElementById('ipt').value);
+			var body = encodeURIComponent("After creating the issue, construct your shortened URL using n, the issue's number:  https://ghurl.github.io/?n");
+			if (nextN) {
+				body += encodeURIComponent("\n\nIf nobody beats you to it, your URL will be:  https://ghurl.github.io/?" + nextN);
+			}
+			var url = 'https://github.com/ghurl/db/issues/new?title=' + title + '&body=' + body;
+			window.open(url, '_blank');
+			return false;
+		};
+
 		var redirect = function(n) {
 			document.body.className = "redirect";
 			getJson(issuesUrl + '/' + n, function(status, json) {
@@ -139,9 +183,12 @@
 			})
 		};
 
+		var nextN = null;
+
 		var explain = function() {
 			document.body.className = "explain";
 			getJson(issuesUrl, function(status, json) {
+				nextN = json.length;
 				var ul = document.getElementById('existing');
 				var i;
 				for(i = 0; i < json.length; i++) {
@@ -185,6 +232,12 @@
 				<li>
 					Create an issue on the <a href="https://github.com/ghurl/db/issues">ghurl/db</a> repository.
 					The <strong>title</strong> of the issue should be the URL you want to redirect to.
+					<p>
+						<form onSubmit="return handleSubmit();">
+							<input id="ipt" type="text" placeholder="http://paste.your/url/here">
+							<button type="submit">go</button>
+						</form>
+					</p>
 				</li>
 				<li>Note <strong>n</strong>, the <strong>issue's number</strong>.</li>
 				<li>
