@@ -95,43 +95,66 @@
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
 		ga('create', 'UA-38564882-9', 'ghurl.github.io');
 		ga('send', 'pageview');
-
 	</script>
 
 	<script>
+		var issuesUrl = "https://api.github.com/repos/ghurl/db/issues";
+
+		var getJson = function(url, cb) {
+			var r = new XMLHttpRequest();
+			r.open("GET", url, true);
+			r.onreadystatechange = function () {
+				if(r.readyState !== 4) return;
+				var json = JSON.parse(r.responseText);
+				cb(r.status, json);
+			};
+			r.send();
+		};
+
 		var getN = function() {
 			return parseInt(window.location.search.substring(1), 10);
 		};
 
+		var fixUrl = function(url) {
+			if(!/^https?:\/\//.test(url)) {
+				return 'http://' + url;
+			}
+			return url;
+		};
+
 		var redirect = function(n) {
 			document.body.className = "redirect";
-			var r = new XMLHttpRequest();
-			r.open("GET", "https://api.github.com/repos/ghurl/db/issues/" + n, true);
-			r.onreadystatechange = function () {
-				if(r.readyState !== 4) return;
-
-				var json = JSON.parse(r.responseText);
-
-				if(r.status === 200) {
-					var url = json.title;
-					if(!/^https?:\/\//.test(url)) {
-						url = 'http://' + url;
-					}
+			getJson(issuesUrl + '/' + n, function(status, json) {
+				if(status === 200) {
+					var url = fixUrl(json.title);
 					window.location.replace(url);
 				} else {
 					document.body.className = "error";
 					console.log(json.message);
 					document.getElementById('error-message').innerHTML = json.message;
 				}
-			};
-			r.send();
+			})
 		};
 
 		var explain = function() {
 			document.body.className = "explain";
+			getJson(issuesUrl, function(status, json) {
+				var ul = document.getElementById('existing');
+				var i;
+				for(i = 0; i < json.length; i++) {
+					var number = json[i].number;
+					var url = fixUrl(json[i].title);
+					var short = 'ghurl.github.io/?' + number;
+					var li = document.createElement('li');
+					var a = document.createElement('a');
+					a.href = 'https://' + short;
+					a.textContent = short + ' → ' + url;
+					li.appendChild(a);
+					ul.appendChild(li);
+				}
+			})
 		};
 
 		var main = function() {
@@ -147,7 +170,6 @@
 	</script>
 
 	<div id="container">
-
 		<h1><a href="/">ghurl</a></h1>
 
 		<section class="unk">
@@ -169,6 +191,13 @@
 					<code>https://ghurl.github.io/?n</code>
 				</li>
 			</ol>
+			<p>
+				Existing URLs:
+			</p>
+			<ul id="existing">
+
+			</ul>
+
 		</section>
 
 		<section class="error">
@@ -202,9 +231,6 @@
 				Source code available <a href="https://github.com/ghurl/ghurl.github.io">on GitHub</a>
 			</div>
 		</address>
-
-
-
 	</div>
 
 </body>
